@@ -9,8 +9,8 @@ spec:
         elements:
           - app: metallb
             path: apps/metallb
-          #- app: vault
-          #  path: apps/vault
+          - app: vault
+            path: apps/vault
           #- app: cert-manager
           #  path: apps/cert-manager
           #- app: eso
