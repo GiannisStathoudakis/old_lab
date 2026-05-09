@@ -13,8 +13,8 @@ spec:
             path: apps/vault
           - app: cert-manager
             path: apps/cert-manager
-          #- app: eso
-          #  path: apps/external-secrets
+          - app: eso
+            path: apps/external-secrets
           #- app: istio
           #  path: apps/istio
           #- app: argocd
