@@ -1,0 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lab-wildcard-tls
+  namespace: istio-system
+spec:
+  secretName: lab-wildcard-tls
+  issuerRef:
+    name: vault-issuer
+    kind: ClusterIssuer
+  commonName: "*.lab.internal"
+  dnsNames:
+    - "lab.internal"
+    - "*.lab.internal"
+    - "argocd.lab.internal"
+    - "vault.lab.internal"
+    - "rancher.lab.internal"
+    - "longhorn.lab.internal"
+    - "authentik.lab.internal"
+    - "grafana.lab.internal"
+    - "forgejo.lab.internal"
+    - "kiali.lab.internal"
+    - "apps.lab.internal"
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - server auth
+    - client auth
