@@ -11,8 +11,8 @@ spec:
             path: apps/metallb
           - app: vault
             path: apps/vault
-          #- app: cert-manager
-          #  path: apps/cert-manager
+          - app: cert-manager
+            path: apps/cert-manager
           #- app: eso
           #  path: apps/external-secrets
           #- app: istio
