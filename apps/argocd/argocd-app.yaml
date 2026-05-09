@@ -1,0 +1,88 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 9.5.2
+    helm:
+      values: |
+        dex:
+          enabled: true
+
+        global:
+          domain: argocd.lab.internal
+          hostAliases:
+            - ip: "192.168.80.200"
+              hostnames:
+              - "authentik.lab.internal"
+          
+        #configs:
+        #  cm:
+        #    url: https://argocd.lab.internal
+        #    oidc.config: |
+        #      name: Authentik
+        #      issuer: https://authentik.lab.internal/application/o/argocd/
+        #      clientID: $argocd-oidc-secret:clientID
+        #      clientSecret: $argocd-oidc-secret:clientSecret
+        #      requestedScopes: ["openid", "profile", "email", "groups"]
+        #      rootCA: $argocd-oidc-secret:rootCA
+
+        #  rbac:
+        #    policy.default: ''
+        #    policy.csv: |
+        #      g, authentik Admins, role:admin
+
+        fullnameOverride: "argocd"
+
+        server:
+          extraArgs:
+            - --insecure
+          config:
+            url: https://argocd.lab.internal
+          
+          ingress:
+            enabled: false
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8083"
+
+        controller:
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8082"
+
+        repoServer:
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8084"
+
+        applicationSet:
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8080"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

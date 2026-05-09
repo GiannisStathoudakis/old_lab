@@ -17,12 +17,12 @@ spec:
             path: apps/external-secrets
           - app: istio
             path: apps/istio
-          #- app: argocd
-          #  path: apps/argocd
-          #- app: rancher
-          #  path: apps/rancher
-          #- app: longhorn
-          #  path: apps/longhorn
+          - app: argocd
+            path: apps/argocd
+          - app: rancher
+            path: apps/rancher
+          - app: longhorn
+            path: apps/longhorn
           #- app: grafana
           #  path: apps/grafana
           #- app: victoria
