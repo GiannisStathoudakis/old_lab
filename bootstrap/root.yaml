@@ -15,8 +15,8 @@ spec:
             path: apps/cert-manager
           - app: eso
             path: apps/external-secrets
-          #- app: istio
-          #  path: apps/istio
+          - app: istio
+            path: apps/istio
           #- app: argocd
           #  path: apps/argocd
           #- app: rancher
