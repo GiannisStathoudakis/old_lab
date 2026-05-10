@@ -67,9 +67,8 @@ spec:
   hostnames: ["longhorn.lab.internal"]
   rules:
   - backendRefs:
-    - name: ak-outpost-authentik-proxy
-      namespace: authentik
-      port: 9000
+    - name: longhorn-frontend
+      port: 80
 ---
 # -----------------------------
 # Grafana Routing
