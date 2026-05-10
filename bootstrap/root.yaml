@@ -29,8 +29,8 @@ spec:
             path: apps/victoria
           - app: kiali
             path: apps/kiali
-          #- app: authentik
-          #  path: apps/authentik
+          - app: authentik
+            path: apps/authentik
           #- app: forgejo
           #  path: apps/forgejo
           #- app: forgejo-runner
