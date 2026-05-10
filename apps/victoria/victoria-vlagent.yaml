@@ -12,9 +12,7 @@ spec:
     helm:
       values: |
         fullnameOverride: "vlagent"
-        extraArgs:
-          - "-opentelemetry.enabled=true" # Enable OTLP ingestion
-          - "-opentelemetry.http.listenAddr=:9428"
+        
         remoteWrite:
           - url: "http://victoria-logs-server.victoria.svc.cluster.local:9428/insert/native"
 
