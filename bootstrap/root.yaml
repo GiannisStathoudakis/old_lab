@@ -25,8 +25,8 @@ spec:
             path: apps/longhorn
           - app: grafana
             path: apps/grafana
-          #- app: victoria
-          #  path: apps/victoria
+          - app: victoria
+            path: apps/victoria
           #- app: kiali
           #  path: apps/kiali
           #- app: authentik

@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: victoria-traces
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    chart: victoria-traces-single
+    targetRevision: 0.0.7 
+    helm:
+      values: |
+        fullnameOverride: "victoria-traces"
+        server:
+          service:
+            # 9411 is the Jaeger-compatible port for Grafana
+            # 4317/4318 are the OTLP ports for agents
+            servicePort: 9411 
+            name: http
+
+          # --- LONGHORN PERSISTENCE ---
+          persistentVolume:
+            enabled: true
+            size: 20Gi # Traces are small but there are many of them
+            storageClassName: "longhorn-single-replica"
+
+          # After 7 days delete logs
+          retentionPeriod: 7d
+
+          # Resource limits
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: victoria
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

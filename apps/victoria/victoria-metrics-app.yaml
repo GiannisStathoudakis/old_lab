@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: victoria-metrics
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    chart: victoria-metrics-single
+    targetRevision: 0.35.0 
+    helm:
+      values: |
+        fullnameOverride: "victoria-metrics"
+        server:
+          service:
+            servicePort: 9411 
+            name: http
+          
+          service:
+            servicePort: 8428
+            name: http
+          
+          # --- LONGHORN PERSISTENCE ---
+          persistentVolume:
+            enabled: true
+            size: 5Gi
+            storageClassName: "longhorn-single-replica"
+          
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: victoria
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
