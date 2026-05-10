@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://kiali.org/helm-charts
+    chart: kiali-server
+    targetRevision: 2.24.0
+    helm:
+      values: |
+        auth:
+          strategy: "anonymous"
+        external_services:
+          prometheus:
+            url: "http://victoria-metrics-server.victoria.svc.cluster.local:8428"
+          
+          grafana:
+            in_cluster_url: "http://grafana.grafana.svc.cluster.local:80"
+            enabled: true
+
+          racing:
+            enabled: false
+            
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
