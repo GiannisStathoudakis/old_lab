@@ -23,8 +23,8 @@ spec:
             path: apps/rancher
           - app: longhorn
             path: apps/longhorn
-          #- app: grafana
-          #  path: apps/grafana
+          - app: grafana
+            path: apps/grafana
           #- app: victoria
           #  path: apps/victoria
           #- app: kiali
