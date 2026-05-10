@@ -67,7 +67,7 @@ spec:
   hostnames: ["longhorn.lab.internal"]
   rules:
   - backendRefs:
-    - name: ak-outpost-authentik-proxy
+    - name: ak-outpost-authentik-embedded-outpost
       namespace: authentik
       port: 9000
 ---
@@ -104,7 +104,7 @@ spec:
   hostnames: ["kiali.lab.internal"]
   rules:
   - backendRefs:
-    - name: ak-outpost-authentik-proxy
+    - name: ak-outpost-authentik-embedded-outpost
       namespace: authentik
       port: 9000
 ---
