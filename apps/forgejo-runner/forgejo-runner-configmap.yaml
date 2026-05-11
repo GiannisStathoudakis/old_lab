@@ -7,13 +7,12 @@ data:
   config.yaml: |
     log:
       level: info
-      
+
     runner:
       capacity: 5
-    
+      
     container:
       network: ""
-      valid_volumes: []
     
     kubernetes:
       in_cluster: true

@@ -29,8 +29,11 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
-              echo "Registering ${NODE_NAME}..."
+              echo "--- MOUNTED CONFIG TRUTH ---"
+              cat /config.yaml
+              echo "----------------------------"
               
+              echo "Registering ${NODE_NAME}..."
               forgejo-runner register \
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
