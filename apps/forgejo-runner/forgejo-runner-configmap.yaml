@@ -10,7 +10,12 @@ data:
       
     runner:
       capacity: 5
-      executor: kubernetes
+    
+    container:
+      network: ""
+      docker_host: "-"
+      valid_volumes:
+        - '**'
     
     kubernetes:
       namespace: "forgejo-runners"
