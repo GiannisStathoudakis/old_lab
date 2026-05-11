@@ -13,11 +13,10 @@ data:
     
     container:
       network: ""
-      docker_host: "-"
-      valid_volumes:
-        - '**'
+      valid_volumes: []
     
     kubernetes:
+      in_cluster: true
       namespace: "forgejo-runners"
       pod_template: |
         apiVersion: v1
