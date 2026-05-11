@@ -14,7 +14,7 @@
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
                 --token $(cat /secrets/token) \
-                --name k8s-ambient-runner \
+                --name "${NODE_NAME}" \
                 --labels ubuntu-latest
               
               forgejo-runner daemon
