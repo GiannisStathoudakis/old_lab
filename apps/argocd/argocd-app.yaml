@@ -21,21 +21,21 @@ spec:
               hostnames:
               - "authentik.lab.internal"
           
-        #configs:
-        #  cm:
-        #    url: https://argocd.lab.internal
-        #    oidc.config: |
-        #      name: Authentik
-        #      issuer: https://authentik.lab.internal/application/o/argocd/
-        #      clientID: $argocd-oidc-secret:clientID
-        #      clientSecret: $argocd-oidc-secret:clientSecret
-        #      requestedScopes: ["openid", "profile", "email", "groups"]
-        #      rootCA: $argocd-oidc-secret:rootCA
+        configs:
+          cm:
+            url: https://argocd.lab.internal
+            oidc.config: |
+              name: Authentik
+              issuer: https://authentik.lab.internal/application/o/argocd/
+              clientID: $argocd-oidc-secret:clientID
+              clientSecret: $argocd-oidc-secret:clientSecret
+              requestedScopes: ["openid", "profile", "email", "groups"]
+              rootCA: $argocd-oidc-secret:rootCA
 
-        #  rbac:
-        #    policy.default: ''
-        #    policy.csv: |
-        #      g, authentik Admins, role:admin
+          rbac:
+            policy.default: ''
+            policy.csv: |
+              g, authentik Admins, role:admin
 
         fullnameOverride: "argocd"
 
