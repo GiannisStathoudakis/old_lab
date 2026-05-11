@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-runner-controller
+  namespace: forgejo-runners
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forgejo-runner
+  template:
+    metadata:
+      labels:
+        app: forgejo-runner
+    spec:
+      serviceAccountName: forgejo-runner-sa
+      containers:
+        - name: runner
+          image: code.forgejo.org/forgejo/runner:3.4.1
+          env:
+            - name: GITEA_ACTIONS_DEFAULT_ACTIONS_URL
+              value: "https://github.com"
+          command: ["sh", "-c"]
+          args:
+            - |
+              forgejo-runner register \
+                --no-interactive \
+                --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
+                --token $(cat /secrets/token) \
+                --name k8s-ambient-runner \
+                --labels "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-22.04"
+              
+              forgejo-runner daemon --config /config.yaml
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: token-volume
+              mountPath: /secrets
+              readOnly: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: forgejo-runner-config
+        - name: token-volume
+          secret:
+            secretName: forgejo-runner-token

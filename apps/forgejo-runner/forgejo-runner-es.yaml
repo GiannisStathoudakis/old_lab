@@ -1,0 +1,19 @@
+apiVersion: external-secrets.io/v1 
+kind: ExternalSecret
+metadata:
+  name: runner-token-sync
+  namespace: forgejo-runners
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: forgejo-runner-token
+  data:
+    - secretKey: token
+      remoteRef:
+        key: secret/forgejo
+        property: runner-token
