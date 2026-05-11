@@ -1,20 +1,4 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: forgejo-runner-controller
-  namespace: forgejo-runners
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: forgejo-runner
-  template:
-    metadata:
-      labels:
-        app: forgejo-runner
-    spec:
+ spec:
       serviceAccountName: forgejo-runner-sa
       containers:
         - name: runner
@@ -25,14 +9,15 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
+              # 1. Register the runner dynamically
               forgejo-runner register \
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
                 --token $(cat /secrets/token) \
                 --name k8s-ambient-runner \
-                --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
+                --labels ubuntu-latest
               
-              forgejo-runner daemon --config /config.yaml
+              forgejo-runner daemon
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
