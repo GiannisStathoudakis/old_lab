@@ -17,7 +17,7 @@
                 --name "${NODE_NAME}" \
                 --labels ubuntu-latest
               
-              forgejo-runner daemon
+              forgejo-runner daemon --config /config.yaml
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
