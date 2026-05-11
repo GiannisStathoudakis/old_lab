@@ -7,12 +7,14 @@ data:
   config.yaml: |
     log:
       level: info
-
+      
     runner:
       capacity: 5
-      
+    
     container:
       network: ""
+      docker_host: "tcp://127.0.0.1:2375"
+      valid_volumes: []
     
     kubernetes:
       in_cluster: true
