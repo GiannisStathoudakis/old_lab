@@ -1,4 +1,20 @@
- spec:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-runner
+  namespace: forgejo-runners
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forgejo-runner
+  template:
+    metadata:
+      labels:
+        app: forgejo-runner
+    spec:
       serviceAccountName: forgejo-runner-sa
       containers:
         - name: runner
@@ -9,14 +25,14 @@
           command: ["sh", "-c"]
           args:
             - |
-              RUNNER_NAME=${HOSTNAME}
-              forgejo-runner register \
-                --no-interactive \
-                --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
-                --token $(cat /secrets/token) \
-                --name "${RUNNER_NAME}" \
-                --labels ubuntu-latest
-              
+              if [ ! -f /data/.runner ]; then
+                forgejo-runner register \
+                  --config /config.yaml \
+                  --no-interactive \
+                  --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
+                  --token "$(cat /secrets/token)" \
+                  --name "${HOSTNAME}"
+              fi
               forgejo-runner daemon --config /config.yaml
           volumeMounts:
             - name: config-volume
@@ -41,3 +57,5 @@
         - name: token-volume
           secret:
             secretName: forgejo-runner-token
+        - name: runner-data
+          emptyDir: {}
