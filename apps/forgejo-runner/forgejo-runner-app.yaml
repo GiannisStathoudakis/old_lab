@@ -20,10 +20,8 @@ spec:
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
           env:
-            # Bypasses the slow data.forgejo.org mirror for instant clones
             - name: GITEA_ACTIONS_DEFAULT_ACTIONS_URL
               value: "https://github.com"
-            # Gives the pod a dynamic identity to prevent registration conflicts
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
@@ -31,23 +29,16 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
-              # Create dummy file to prevent daemon initialization errors
-              touch .runner
-              
               echo "Registering ${NODE_NAME}..."
               
-              # Register with full labels to ensure the "fat" Node/Git images are used.
-              # The '|| true' equivalent prevents CrashLoopBackOffs if already registered.
               forgejo-runner register \
                 --no-interactive \
                 --instance https://forgejo.lab.internal/ \
                 --token $(cat /secrets/token) \
                 --name "${NODE_NAME}" \
-                --labels "ubuntu-latest:docker.io/catthehacker/ubuntu:act-latest" || echo "Already registered! Moving on..."
+                --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04" || true
               
               echo "Starting daemon..."
-              
-              # exec ensures PID 1 routing, and --config forces it to read your volume map
               exec forgejo-runner daemon --config /config.yaml
           volumeMounts:
             - name: config-volume
