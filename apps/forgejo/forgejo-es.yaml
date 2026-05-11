@@ -1,0 +1,23 @@
+apiVersion: external-secrets.io/v1 
+kind: ExternalSecret
+metadata:
+  name: forgejo-secrets-sync
+  namespace: forgejo-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: forgejo-auth
+  data:
+    - secretKey: username
+      remoteRef:
+        key: secret/forgejo
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: secret/forgejo
+        property: password

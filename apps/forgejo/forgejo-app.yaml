@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forgejo
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: code.forgejo.org/forgejo-helm
+    chart: forgejo
+    targetRevision: 16.2.2
+    helm:
+      values: |
+        gitea:
+          config:
+            server:
+              ROOT_URL: "https://forgejo.lab.internal/"
+              SSH_DOMAIN: "forgejo.lab.internal"
+            actions:
+              ENABLED: true
+          admin:
+            existingSecret: "forgejo-auth"
+        service:
+          ssh:
+            type: LoadBalancer
+            port: 22
+        persistence:
+          enabled: true
+          storageClass: "longhorn-single-replica"
+          size: 20Gi
+        postgresql:
+          primary:
+            persistence:
+              enabled: true
+              storageClass: "longhorn-single-replica"
+              size: 10Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: forgejo-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

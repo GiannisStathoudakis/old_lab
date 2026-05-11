@@ -31,8 +31,8 @@ spec:
             path: apps/kiali
           - app: authentik
             path: apps/authentik
-          #- app: forgejo
-          #  path: apps/forgejo
+          - app: forgejo
+            path: apps/forgejo
           #- app: forgejo-runner
           #  path: apps/forgejo-runner
 
