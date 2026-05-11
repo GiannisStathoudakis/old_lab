@@ -3,21 +3,15 @@ kind: ConfigMap
 metadata:
   name: forgejo-runner-config
   namespace: forgejo-runners
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 data:
   config.yaml: |
     runner:
       capacity: 5
-      file: /data/.runner
-      labels:
-        - "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
-    
     container:
       network: ""
       valid_volumes:
         - '**'
-      
+      options: "-v /certs/client"
       kubernetes:
         namespace: "forgejo-runners"
         pod_template: |
@@ -26,10 +20,6 @@ data:
           metadata:
             generateName: forgejo-job-
           spec:
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 1000
-              fsGroup: 1000
             containers:
               - name: job
                 resources:
