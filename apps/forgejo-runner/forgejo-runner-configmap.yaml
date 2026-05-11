@@ -16,7 +16,6 @@ data:
       network: ""
       valid_volumes:
         - '**'
-      options: "-v /certs/client"
       
       kubernetes:
         namespace: "forgejo-runners"

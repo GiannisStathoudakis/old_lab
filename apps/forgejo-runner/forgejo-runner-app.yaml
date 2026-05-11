@@ -25,6 +25,8 @@
             - name: token-volume
               mountPath: /secrets
               readOnly: true
+            - name: runner-data
+              mountPath: /data
           resources:
             requests:
               cpu: "250m"
