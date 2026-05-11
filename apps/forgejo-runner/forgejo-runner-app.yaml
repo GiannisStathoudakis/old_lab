@@ -33,7 +33,7 @@ spec:
               
               forgejo-runner register \
                 --no-interactive \
-                --instance https://forgejo.lab.internal/ \
+                --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
                 --token $(cat /secrets/token) \
                 --name "${NODE_NAME}" \
                 --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04" || true
