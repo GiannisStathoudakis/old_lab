@@ -9,8 +9,9 @@ data:
   config.yaml: |
     runner:
       capacity: 5
+      file: /data/.runner
       labels:
-        - "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-22.04"
+        - "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
     
     container:
       network: ""
