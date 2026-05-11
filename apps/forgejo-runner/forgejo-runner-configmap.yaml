@@ -20,6 +20,10 @@ data:
         metadata:
           generateName: forgejo-job-
         spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
           containers:
             - name: job
               resources:
