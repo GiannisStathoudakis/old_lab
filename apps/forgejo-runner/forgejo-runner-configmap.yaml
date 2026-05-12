@@ -10,9 +10,8 @@ data:
     runner:
       capacity: 5
       labels:
-        - "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
+        - "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-22.04"
     container:
-      docker_host: "-"
       network: ""
       kubernetes:
         namespace: "forgejo-runners"
