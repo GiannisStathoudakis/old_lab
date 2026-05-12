@@ -3,54 +3,6 @@ kind: ConfigMap
 metadata:
   name: forgejo-runner-config
   namespace: forgejo-runners
-data:
-  config.yaml: |
-    log:
-      level: info
-      
-    runner:
-      capacity: 5
-    
-    container:
-      network: ""
-      docker_host: "tcp://127.0.0.1:2375"
-      valid_volumes: []
-    
-    kubernetes:
-      in_cluster: true
-      namespace: "forgejo-runners"
-      pod_template: |
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          generateName: forgejo-job-
-        spec:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            fsGroup: 1000
-          containers:
-            - name: job
-              resources:
-                requests:
-                  cpu: "500m"
-                  memory: "1Gi"
-                limits:
-                  cpu: "2000m"
-                  memory: "2Gi"
-              volumeMounts:
-                - name: workspace
-                  mountPath: /workspace
-          volumes:
-            - name: workspace
-              emptyDir:
-                sizeLimit: 4Gi
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: forgejo-runner-config
-  namespace: forgejo-runners
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 data:
