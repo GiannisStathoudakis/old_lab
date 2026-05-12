@@ -27,9 +27,9 @@ spec:
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
                 --token $(cat /secrets/token) \
                 --name k8s-ambient-runner \
-                --labels ubuntu-latest,alpine-base
+                --labels ubuntu-latest
               
-              forgejo-runner daemon #--config /config.yaml
+              forgejo-runner daemon
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
