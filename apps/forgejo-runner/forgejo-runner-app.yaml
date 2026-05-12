@@ -19,30 +19,17 @@ spec:
       containers:
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
-          env:
-            - name: GITEA_ACTIONS_DEFAULT_ACTIONS_URL
-              value: "https://github.com"
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
           command: ["sh", "-c"]
           args:
             - |
-              echo "--- MOUNTED CONFIG TRUTH ---"
-              cat /config.yaml
-              echo "----------------------------"
-              
-              echo "Registering ${NODE_NAME}..."
               forgejo-runner register \
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
                 --token $(cat /secrets/token) \
-                --name "${NODE_NAME}" \
-                --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04" || true
+                --name k8s-ambient-runner \
+                --labels ubuntu-latest
               
-              echo "Starting daemon..."
-              exec forgejo-runner daemon --config /config.yaml
+              forgejo-runner daemon --config /config.yaml
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
