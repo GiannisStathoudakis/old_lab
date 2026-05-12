@@ -12,6 +12,7 @@ data:
       labels:
         - "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
     container:
+      docker_host: "-"
       network: ""
       kubernetes:
         namespace: "forgejo-runners"
