@@ -16,6 +16,8 @@ spec:
       labels:
         app: forgejo-runner
     spec:
+      securityContext:
+        fsGroup: 1000
       serviceAccountName: forgejo-runner-sa
       containers:
         - name: runner
