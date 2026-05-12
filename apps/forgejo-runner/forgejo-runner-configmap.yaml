@@ -10,7 +10,7 @@ data:
     runner:
       capacity: 5
       labels:
-        - "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-22.04"
+        - "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
     container:
       network: ""
       kubernetes:
