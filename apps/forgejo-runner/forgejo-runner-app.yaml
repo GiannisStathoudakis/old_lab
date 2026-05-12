@@ -22,12 +22,14 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
-              forgejo-runner register \
-                --no-interactive \
-                --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
-                --token $(cat /secrets/token) \
-                --name k8s-ambient-runner \
-                --labels ubuntu-latest
+              if [ ! -f .runner ]; then
+                forgejo-runner register \
+                  --no-interactive \
+                  --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
+                  --token $(cat /secrets/token) \
+                  --name k8s-ambient-runner \
+                  --labels "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-22.04"
+              fi
               
               forgejo-runner daemon --config /config.yaml
           volumeMounts:
