@@ -1,12 +1,11 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: forgejo-runner-controller
   namespace: forgejo-runners
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
-  serviceName: "forgejo-runner" 
   replicas: 1
   selector:
     matchLabels:
@@ -16,29 +15,22 @@ spec:
       labels:
         app: forgejo-runner
     spec:
-      securityContext:
-        fsGroup: 1000
       serviceAccountName: forgejo-runner-sa
       containers:
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
-          workingDir: /data
           command: ["sh", "-c"]
           args:
             - |
-              if [ ! -f .runner ]; then
-                forgejo-runner register \
-                  --no-interactive \
-                  --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
-                  --token $(cat /secrets/token) \
-                  --name k8s-ambient-runner \
-                  --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-22.04"
-              fi
+              forgejo-runner register \
+                --no-interactive \
+                --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000 \
+                --token $(cat /secrets/token) \
+                --name k8s-ambient-runner \
+                --labels ubuntu-latest
               
               forgejo-runner daemon --config /config.yaml
           volumeMounts:
-            - name: runner-state
-              mountPath: /data
             - name: config-volume
               mountPath: /config.yaml
               subPath: config.yaml
@@ -59,12 +51,3 @@ spec:
         - name: token-volume
           secret:
             secretName: forgejo-runner-token
-  volumeClaimTemplates:
-    - metadata:
-        name: runner-state
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "longhorn-single-replica"
-        resources:
-          requests:
-            storage: 5Gi
