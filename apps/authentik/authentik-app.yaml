@@ -57,7 +57,7 @@ spec:
           primary:
             persistence:
               enabled: true
-              storageClass: "longhorn"
+              storageClass: "longhorn-single-replica"
               size: 8Gi
             service:
               ports:
