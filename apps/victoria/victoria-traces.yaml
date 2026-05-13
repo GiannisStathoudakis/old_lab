@@ -13,6 +13,11 @@ spec:
       values: |
         fullnameOverride: "victoria-traces"
         server:
+          extraArgs:
+            otlpGRPCListenAddr: ":4317"
+            "otlpGRPC.tls": "false"
+            httpListenAddr: ":3200"
+            
           service:
             servicePort: 9411 
             name: http
