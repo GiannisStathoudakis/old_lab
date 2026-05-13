@@ -14,8 +14,9 @@ spec:
         fullnameOverride: "victoria-traces"
         server:
           extraArgs:
-            - "-otlpGRPCListenAddr=:4317"
-            - "-otlpHTTPListenAddr=:4318"
+            otlpGRPCListenAddr: ":4317"
+            otlpHTTPListenAddr: ":4318"
+            httpListenAddr: ":8428"
             
           service:
             servicePort: 3200
