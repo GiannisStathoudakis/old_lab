@@ -18,7 +18,8 @@ spec:
             "otlpGRPC.tls": "false"
 
           service:
-            servicePort: 9411 
+            servicePort: 10428
+            targetPort: 10428
             name: http
 
           # --- LONGHORN PERSISTENCE ---
