@@ -17,27 +17,27 @@ spec:
             otlpGRPCListenAddr: ":4317"
             "otlpGRPC.tls": "false"
             httpListenAddr: ":3200"
-            
+
           service:
-            servicePort: 3200
-            targetPort: 3200
+            servicePort: 9411 
             name: http
 
           # --- LONGHORN PERSISTENCE ---
           persistentVolume:
             enabled: true
-            size: 20Gi
+            size: 20Gi 
             storageClassName: "longhorn-single-replica"
 
+          # After 7 days delete logs
           retentionPeriod: 7d
 
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 50m
+              memory: 128Mi
             limits:
-              cpu: 1000m
-              memory: 2Gi
+              cpu: 500m
+              memory: 1Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: victoria
