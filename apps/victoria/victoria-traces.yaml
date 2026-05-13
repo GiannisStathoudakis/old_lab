@@ -16,13 +16,13 @@ spec:
           extraArgs:
             otlpGRPCListenAddr: ":4317"
             "otlpGRPC.tls": "false"
-            httpListenAddr: ":10428"
+            httpListenAddr: ":3200"
             
           service:
             servicePort: 3200
-            targetPort: 10428
+            targetPort: 3200
             name: http
-            
+
           # --- LONGHORN PERSISTENCE ---
           persistentVolume:
             enabled: true
