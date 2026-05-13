@@ -14,28 +14,32 @@ spec:
         fullnameOverride: "victoria-traces"
         server:
           service:
-            # 9411 is the Jaeger-compatible port for Grafana
-            # 4317/4318 are the OTLP ports for agents
-            servicePort: 9411 
+            servicePort: 3200
             name: http
+            extraPorts:
+              - name: otlp-grpc
+                port: 4317
+                targetPort: 4317
+              - name: otlp-http
+                port: 4318
+                targetPort: 4318
 
           # --- LONGHORN PERSISTENCE ---
           persistentVolume:
             enabled: true
-            size: 20Gi # Traces are small but there are many of them
+            size: 20Gi
             storageClassName: "longhorn-single-replica"
 
-          # After 7 days delete logs
           retentionPeriod: 7d
 
-          # Resource limits
+          # Resources (Slightly increased for Tempo-style queries)
           resources:
             requests:
-              cpu: 50m
-              memory: 128Mi
+              cpu: 100m
+              memory: 256Mi
             limits:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 1000m
+              memory: 2Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: victoria
