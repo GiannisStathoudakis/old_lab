@@ -12,7 +12,12 @@ spec:
     helm:
       values: |
         mode: deployment
-        
+
+        # --- IMAGE SELECTION (Required) ---
+        image:
+          # You need 'contrib' to use the prometheusremotewrite exporter
+          repository: "otel/opentelemetry-collector-contrib"
+
         ports:
           otlp:
             enabled: true
@@ -39,12 +44,12 @@ spec:
               endpoint: "http://victoria-metrics-server.victoria.svc.cluster.local:8428/api/v1/write"
               
             otlphttp/logs:
-              endpoint: "http://victoria-logs-server.victoria.svc.cluster.local:9428/insert/otlp/v1/logs"
+              endpoint: "http://victoria-logs-server.victoria.svc.cluster.local:9428/insert/opentelemetry/v1/logs"
               tls:
                 insecure: true
 
-            otlphttp/traces:
-              endpoint: "http://victoria-traces-server.victoria.svc.cluster.local:9411" 
+            otlp/traces:
+              endpoint: "victoria-traces-server.victoria.svc.cluster.local:4317"
               tls:
                 insecure: true
 
@@ -61,7 +66,7 @@ spec:
               traces:
                 receivers: [otlp]
                 processors: []
-                exporters: [otlphttp/traces]
+                exporters: [otlp/traces]
 
   destination:
     server: https://kubernetes.default.svc
