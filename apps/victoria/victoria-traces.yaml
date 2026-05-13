@@ -13,8 +13,13 @@ spec:
       values: |
         fullnameOverride: "victoria-traces"
         server:
+          extraArgs:
+            - "-otlpGRPCListenAddr=:4317"
+            - "-otlpHTTPListenAddr=:4318"
+            
           service:
             servicePort: 3200
+            targetPort: 8428
             name: http
             extraPorts:
               - name: otlp-grpc
@@ -32,7 +37,6 @@ spec:
 
           retentionPeriod: 7d
 
-          # Resources (Slightly increased for Tempo-style queries)
           resources:
             requests:
               cpu: 100m
