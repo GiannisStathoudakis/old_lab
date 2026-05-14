@@ -68,7 +68,7 @@ spec:
                 --name k8s-ambient-runner \
                 --labels ubuntu-latest
               
-              forgejo-runner daemon
+              forgejo-runner daemon --log-level trace
           resources:
             requests:
               cpu: "250m"
