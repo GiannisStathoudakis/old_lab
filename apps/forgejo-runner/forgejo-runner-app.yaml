@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: forgejo-runner-controller
+  name: forgejo-runner
   namespace: forgejo-runners
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
+  serviceName: forgejo-runner
   replicas: 1
   selector:
     matchLabels:
@@ -16,21 +17,45 @@ spec:
         app: forgejo-runner
     spec:
       serviceAccountName: forgejo-runner-sa
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
+        # Sidecar: Rootless Docker Daemon
+        - name: dind-rootless
+          image: docker:dind-rootless
+          securityContext:
+            privileged: false
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          volumeMounts:
+            - name: runner-workspace
+              mountPath: /var/lib/docker
+            - name: runner-workspace
+              mountPath: /workspace
+
+        # Main: Forgejo Runner
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
+          env:
+            - name: DOCKER_HOST
+              value: "tcp://localhost:2375" # Points to the local sidecar
           command: ["sh", "-c"]
           args:
             - |
+              # Wait for the rootless sidecar to initialize
+              while ! wget -q -O - http://localhost:2375/_ping; do sleep 2; done;
+              
               forgejo-runner register \
-                --config /config.yaml \
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
                 --token $(cat /secrets/token) \
                 --name k8s-ambient-runner \
                 --labels ubuntu-latest
               
-              forgejo-runner daemon --config /config.yaml
+              forgejo-runner daemon
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
@@ -38,13 +63,8 @@ spec:
             - name: token-volume
               mountPath: /secrets
               readOnly: true
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
+            - name: runner-workspace
+              mountPath: /workspace
       volumes:
         - name: config-volume
           configMap:
@@ -52,3 +72,13 @@ spec:
         - name: token-volume
           secret:
             secretName: forgejo-runner-token
+  # Longhorn Persistent Storage replacing RAM
+  volumeClaimTemplates:
+    - metadata:
+        name: runner-workspace
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "longhorn-single-replica"
+        resources:
+          requests:
+            storage: 10Gi
