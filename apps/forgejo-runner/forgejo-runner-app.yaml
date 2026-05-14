@@ -18,15 +18,14 @@ spec:
     spec:
       serviceAccountName: forgejo-runner-sa
       securityContext:
-        # Ensures the Longhorn volume is writable by the rootless Docker daemon (UID 1000)
+        # Ensures the Longhorn volume is writable by both containers
         fsGroup: 1000 
       containers:
-        # Sidecar: Rootless Docker Daemon
-        - name: dind-rootless
-          image: docker:dind-rootless
+        # Sidecar: Standard Docker Daemon (Rootful)
+        - name: dind
+          image: docker:dind
           securityContext:
-            # The compensated control: Lifts K8s filters so the node allows namespace creation.
-            # The daemon itself still runs as an unprivileged user internally.
+            # Required for standard DinD to run the Docker engine
             privileged: true
           env:
             - name: DOCKER_TLS_CERTDIR
@@ -47,7 +46,7 @@ spec:
               mountPath: /lib/modules
               readOnly: true
 
-        # Main: Forgejo Runner Orchestrator
+        # Main: Forgejo Runner Orchestrator (Rootless)
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
           securityContext:
@@ -56,7 +55,7 @@ spec:
             runAsGroup: 1000
           env:
             - name: DOCKER_HOST
-              value: "tcp://localhost:2375"
+              value: "tcp://127.0.0.1:2375"
           command: ["sh", "-c"]
           args:
             - |
