@@ -25,27 +25,39 @@ spec:
         # Sidecar: Rootless Docker Daemon
         - name: dind-rootless
           image: docker:dind-rootless
+          # The security context bypasses K8s default mount blocking
           securityContext:
             privileged: false
+            seccompProfile:
+              type: Unconfined
+            appArmorProfile:
+              type: Unconfined
           env:
             - name: DOCKER_TLS_CERTDIR
               value: ""
+          # Dedicate the heavy lifting RAM/CPU to the Docker daemon
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
           volumeMounts:
             - name: runner-workspace
               mountPath: /var/lib/docker
             - name: runner-workspace
               mountPath: /workspace
 
-        # Main: Forgejo Runner
+        # Main: Forgejo Runner Orchestrator
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
           env:
             - name: DOCKER_HOST
-              value: "tcp://localhost:2375" # Points to the local sidecar
+              value: "tcp://localhost:2375"
           command: ["sh", "-c"]
           args:
             - |
-              # Wait for the rootless sidecar to initialize
               while ! wget -q -O - http://localhost:2375/_ping; do sleep 2; done;
               
               forgejo-runner register \
@@ -56,6 +68,14 @@ spec:
                 --labels ubuntu-latest
               
               forgejo-runner daemon
+          # The orchestrator uses very little resources
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
@@ -72,13 +92,12 @@ spec:
         - name: token-volume
           secret:
             secretName: forgejo-runner-token
-  # Longhorn Persistent Storage replacing RAM
   volumeClaimTemplates:
     - metadata:
         name: runner-workspace
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "longhorn-single-replica"
+        storageClassName: "longhorn"
         resources:
           requests:
             storage: 10Gi
