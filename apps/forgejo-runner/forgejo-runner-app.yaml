@@ -18,24 +18,19 @@ spec:
     spec:
       serviceAccountName: forgejo-runner-sa
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # Ensures the Longhorn volume is writable by the rootless Docker daemon (UID 1000)
+        fsGroup: 1000 
       containers:
         # Sidecar: Rootless Docker Daemon
         - name: dind-rootless
           image: docker:dind-rootless
-          # The security context bypasses K8s default mount blocking
           securityContext:
-            privileged: false
-            seccompProfile:
-              type: Unconfined
-            appArmorProfile:
-              type: Unconfined
+            # The compensated control: Lifts K8s filters so the node allows namespace creation.
+            # The daemon itself still runs as an unprivileged user internally.
+            privileged: true
           env:
             - name: DOCKER_TLS_CERTDIR
               value: ""
-          # Dedicate the heavy lifting RAM/CPU to the Docker daemon
           resources:
             requests:
               cpu: "1000m"
@@ -48,10 +43,17 @@ spec:
               mountPath: /var/lib/docker
             - name: runner-workspace
               mountPath: /workspace
+            - name: lib-modules
+              mountPath: /lib/modules
+              readOnly: true
 
         # Main: Forgejo Runner Orchestrator
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
+          securityContext:
+            # Explicitly run the orchestrator as an unprivileged user
+            runAsUser: 1000
+            runAsGroup: 1000
           env:
             - name: DOCKER_HOST
               value: "tcp://localhost:2375"
@@ -68,7 +70,6 @@ spec:
                 --labels ubuntu-latest
               
               forgejo-runner daemon
-          # The orchestrator uses very little resources
           resources:
             requests:
               cpu: "100m"
@@ -92,12 +93,15 @@ spec:
         - name: token-volume
           secret:
             secretName: forgejo-runner-token
+        - name: lib-modules
+          hostPath:
+            path: /lib/modules
   volumeClaimTemplates:
     - metadata:
         name: runner-workspace
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "longhorn"
+        storageClassName: "longhorn-single-replica"
         resources:
           requests:
             storage: 10Gi
