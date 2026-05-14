@@ -9,36 +9,40 @@ data:
   config.yaml: |
     runner:
       capacity: 5
-      labels:
-        - "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-24.04"
+    
     container:
       network: ""
-      kubernetes:
-        namespace: "forgejo-runners"
-        pod_template: |
-          apiVersion: v1
-          kind: Pod
-          metadata:
-            generateName: forgejo-job-
-          spec:
-            securityContext:
-              runAsNonRoot: true
-              runAsUser: 1000
-              fsGroup: 1000
-            containers:
-              - name: job
-                resources:
-                  requests:
-                    cpu: "500m"
-                    memory: "1Gi"
-                  limits:
-                    cpu: "2000m"
-                    memory: "2Gi"
-                volumeMounts:
-                  - name: workspace
-                    mountPath: /workspace
-            volumes:
-              - name: workspace
-                emptyDir:
-                  medium: Memory
-                  sizeLimit: 4Gi
+      docker_host: "tcp://127.0.0.1:2375" # Bypasses the ping bug
+      valid_volumes: []
+    
+    # CRITICAL: This is at the root level, enabling K8s execution
+    kubernetes:
+      in_cluster: true
+      namespace: "forgejo-runners"
+      pod_template: |
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          generateName: forgejo-job-
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+          containers:
+            - name: job
+              resources:
+                requests:
+                  cpu: "500m"
+                  memory: "1Gi"
+                limits:
+                  cpu: "2000m"
+                  memory: "2Gi"
+              volumeMounts:
+                - name: workspace
+                  mountPath: /workspace
+          volumes:
+            - name: workspace
+              emptyDir:
+                # Removed 'medium: Memory' to utilize Longhorn disks and avoid OOM kills
+                sizeLimit: 4Gi

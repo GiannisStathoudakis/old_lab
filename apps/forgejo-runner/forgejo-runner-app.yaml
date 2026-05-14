@@ -19,17 +19,24 @@ spec:
       containers:
         - name: runner
           image: code.forgejo.org/forgejo/runner:3.4.1
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           command: ["sh", "-c"]
           args:
             - |
+              # Register with the explicit image schema attached
               forgejo-runner register \
                 --no-interactive \
                 --instance http://forgejo-http.forgejo-system.svc.cluster.local:3000/ \
                 --token $(cat /secrets/token) \
-                --name k8s-ambient-runner \
-                --labels ubuntu-latest
+                --name "${NODE_NAME}" \
+                --labels "ubuntu-latest:docker://gitea/runner-images:ubuntu-24.04" || true
               
-              forgejo-runner daemon
+              # Execute the daemon
+              exec forgejo-runner daemon --config /config.yaml
           volumeMounts:
             - name: config-volume
               mountPath: /config.yaml
