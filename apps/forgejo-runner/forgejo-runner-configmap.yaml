@@ -8,13 +8,11 @@ metadata:
 data:
   config.yaml: |
     runner:
-      capacity: 5
+      capacity: 1
       labels:
-        - "ubuntu-latest:docker.io/gitea/runner-images:ubuntu-24.04"
+        - "ubuntu-latest:docker://catthehacker/ubuntu:act-latest"
     container:
-      # Use the pod's network so Istio ambient mesh captures job traffic
       network: "host" 
-      # Mount the Longhorn volume into the job containers
       options: "-v /workspace:/workspace"
       valid_volumes:
         - "/workspace"
