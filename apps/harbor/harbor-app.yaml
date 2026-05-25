@@ -34,7 +34,7 @@ spec:
             registry:
               storageClass: "longhorn-single-replica"
               accessMode: ReadWriteOnce
-              size: 30Gi
+              size: 15Gi
             jobservice:
               jobLog:
                 storageClass: "longhorn-single-replica"
