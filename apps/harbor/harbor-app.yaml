@@ -1,0 +1,96 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.goharbor.io
+    chart: harbor
+    targetRevision: 1.19.0 
+    helm:
+      values: |
+        expose:
+          type: clusterIP
+          clusterIP:
+            name: harbor
+            ports:
+              httpPort: 80
+          tls:
+            enabled: false
+        
+        externalURL: https://harbor.lab.internal
+        
+        existingSecretAdminPassword: "harbor-admin-credentials"
+        existingSecretAdminPasswordKey: "admin-password"
+        
+        persistence:
+          enabled: true
+          resourcePolicy: "keep"
+          persistentVolumeClaim:
+            registry:
+              storageClass: "longhorn-single-replica"
+              accessMode: ReadWriteOnce
+              size: 30Gi
+            jobservice:
+              jobLog:
+                storageClass: "longhorn-single-replica"
+                size: 1Gi
+            database:
+              storageClass: "longhorn-single-replica"
+              size: 2Gi
+            redis:
+              storageClass: "longhorn-single-replica"
+              size: 1Gi
+            trivy:
+              storageClass: "longhorn-single-replica"
+              size: 5Gi
+              
+        internalTLS:
+          enabled: false
+          
+        trivy:
+          enabled: true
+          
+        metrics:
+          enabled: true
+          core:
+            path: /metrics
+            port: 8001
+          registry:
+            path: /metrics
+            port: 8001
+          jobservice:
+            path: /metrics
+            port: 8001
+          exporter:
+            path: /metrics
+            port: 8001
+          serviceMonitor:
+            enabled: true
+        
+        trace:
+          enabled: true
+          provider: otel
+          sample_rate: 1 
+          otel:
+            # Point this to your central OpenTelemetry Collector service
+            endpoint: opentelemetry-collector.victoria.svc.cluster.local:4318
+            url_path: /v1/traces
+            compression: false
+            insecure: true
+            timeout: 10
+          
+        logLevel: info
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: harbor-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
