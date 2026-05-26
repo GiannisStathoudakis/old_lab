@@ -15,7 +15,7 @@ spec:
         labels:
           argocd.argoproj.io/secret-type: repository
       data:
-        url: harbor.harbor-system.svc.cluster.local
+        url: harbor.harbor-system.svc.cluster.local:80
         type: helm
         enableOCI: "true"
         name: harbor-internal
