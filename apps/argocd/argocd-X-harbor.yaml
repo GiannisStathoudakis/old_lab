@@ -15,12 +15,13 @@ spec:
         labels:
           argocd.argoproj.io/secret-type: repository
       data:
-        url: harbor.lab.internal
+        url: harbor.harbor-system.svc.cluster.local
         type: helm
         enableOCI: "true"
         name: harbor-internal
         username: "{{ .harbor_user }}"
         password: "{{ .harbor_pass }}"
+        insecure: "true"
   data:
   - secretKey: harbor_user
     remoteRef:
