@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: spring-apps
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - app: hello-world
+            repoURL: ssh://git@forgejo-ssh.forgejo-system.svc.cluster.local:22/admin1/Test.git
+            path: infra
+            namespace: spring-apps
+  template:
+    metadata:
+      name: '{{app}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repoURL}}'
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
