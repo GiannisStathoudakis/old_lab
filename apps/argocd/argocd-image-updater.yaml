@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://argoproj.github.io/hosted-helm
+    repoURL: https://argoproj.github.io/argo-helm
     chart: argocd-image-updater
     targetRevision: 1.2.2
     helm:
