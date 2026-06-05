@@ -14,14 +14,9 @@ spec:
         config:
           registries:
             - name: harbor
-              api-url: https://harbor.lab.internal
+              api_url: https://harbor.lab.internal
               ping: yes
-              credentials: pullsecret:spring-apps/harbor-pull-secret
-        extraArgs:
-            - --watch-namespaces=*
-          env:
-            - name: ARGOCD_SERVER_URL
-              value: "argocd-server.argocd.svc.cluster.local:443"
+              credentials: pullsecret:argocd/harbor-pull-secret
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -29,3 +24,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
