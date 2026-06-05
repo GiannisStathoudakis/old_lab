@@ -1,4 +1,4 @@
-apiVersion: external-secrets.io/v1 
+apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: argocd-harbor-pull-secret-sync
@@ -9,7 +9,19 @@ spec:
     name: vault-backend
     kind: ClusterSecretStore
   target:
-    name: harbor-pull-secret 
+    name: harbor-pull-secret
+    template:
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: |
+          {
+            "auths": {
+              "harbor.lab.internal": {
+                "username": "{{ .username }}",
+                "password": "{{ .password }}"
+              }
+            }
+          }
   data:
   - secretKey: username
     remoteRef:
