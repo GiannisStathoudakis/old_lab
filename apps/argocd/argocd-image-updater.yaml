@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-image-updater
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://argoproj.github.io/hosted-helm
+    chart: argocd-image-updater
+    targetRevision: 1.2.2
+    helm:
+      values: |
+        config:
+          registries:
+            - name: harbor
+              api-url: https://harbor.lab.internal
+              ping: yes
+              credentials: pullsecret:spring-apps/harbor-pull-secret
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
