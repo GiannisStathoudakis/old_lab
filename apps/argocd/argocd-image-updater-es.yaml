@@ -17,7 +17,7 @@ spec:
           {
             "auths": {
               "harbor.lab.internal": {
-                "auth": "{{ printf \"%s:%s\" .username .password | b64enc }}"
+                "auth": "{{ printf "%s:%s" .username .password | b64enc }}"
               }
             }
           }
