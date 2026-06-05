@@ -17,6 +17,11 @@ spec:
               api-url: https://harbor.lab.internal
               ping: yes
               credentials: pullsecret:spring-apps/harbor-pull-secret
+        extraArgs:
+            - --watch-namespaces=*
+          env:
+            - name: ARGOCD_SERVER_URL
+              value: "argocd-server.argocd.svc.cluster.local:443"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
