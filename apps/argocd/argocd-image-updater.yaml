@@ -14,8 +14,9 @@ spec:
         config:
           registries:
             - name: harbor
-              api_url: https://harbor.lab.internal
+              api_url: https://harbor.harbor-system.svc.cluster.local
               ping: yes
+              insecure: yes 
               credentials: pullsecret:argocd/harbor-pull-secret
   destination:
     server: https://kubernetes.default.svc
