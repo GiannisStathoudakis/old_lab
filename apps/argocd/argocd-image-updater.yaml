@@ -15,7 +15,7 @@ spec:
           registries:
             - name: harbor
               prefix: harbor.lab.internal
-              api_url: https://harbor.harbor-system.svc.cluster.local
+              api_url: http://harbor.harbor-system.svc.cluster.local
               ping: yes
               insecure: yes
               credentials: pullsecret:argocd/harbor-pull-secret
