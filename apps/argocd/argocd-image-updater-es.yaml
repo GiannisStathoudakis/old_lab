@@ -1,4 +1,4 @@
-apiVersion: external-secrets.io/v1 
+apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: argocd-harbor-pull-secret-sync
@@ -16,8 +16,11 @@ spec:
         .dockerconfigjson: |
           {
             "auths": {
+              "harbor.harbor-system.svc.cluster.local": {
+                "auth": "{{ printf \"%s:%s\" .username .password | b64enc }}"
+              },
               "harbor.lab.internal": {
-                "auth": "{{ printf "%s:%s" .username .password | b64enc }}"
+                "auth": "{{ printf \"%s:%s\" .username .password | b64enc }}"
               }
             }
           }
