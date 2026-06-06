@@ -17,10 +17,10 @@ spec:
           {
             "auths": {
               "harbor.harbor-system.svc.cluster.local": {
-                "auth": "{{ printf \"%s:%s\" .username .password | b64enc }}"
+                "auth": "{{ printf "%s:%s" .username .password | b64enc }}"
               },
               "harbor.lab.internal": {
-                "auth": "{{ printf \"%s:%s\" .username .password | b64enc }}"
+                "auth": "{{ printf "%s:%s" .username .password | b64enc }}"
               }
             }
           }
