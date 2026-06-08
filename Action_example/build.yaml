@@ -1,0 +1,57 @@
+name: Build and Push to Harbor
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Download and Install Maven (No Sudo)
+        run: |
+          wget https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+          tar xzf apache-maven-3.9.6-bin.tar.gz
+          echo "${PWD}/apache-maven-3.9.6/bin" >> $GITHUB_PATH
+
+      - name: Retrieve Harbor Secrets from Vault
+        uses: https://github.com/hashicorp/vault-action@v3.4.0
+        with:
+          url: http://vault.vault.svc.cluster.local:8200
+          method: token
+          token: ${{ secrets.VAULT_TOKEN }}
+          kv-version: 2
+          secrets: |
+            secret/data/forgejo/registry username | HARBOR_USERNAME ;
+            secret/data/forgejo/registry password | HARBOR_PASSWORD ;
+
+      - name: Build and Push Image
+        run: |
+          mvn compile jib:build \
+            -Djib.from.image=eclipse-temurin:21-jre-alpine \
+            -Djib.to.image=harbor.harbor-system.svc.cluster.local/test/hello-world:${{ github.sha }} \
+            -Djib.to.auth.username='${{ env.HARBOR_USERNAME }}' \
+            -Djib.to.auth.password='${{ env.HARBOR_PASSWORD }}' \
+            -Djib.allowInsecureRegistries=true \
+            -DsendCredentialsOverHttp=true
