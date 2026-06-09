@@ -22,7 +22,7 @@ spec:
         volumeMounts:
           - name: vault-ca-cert
             mountPath: /etc/ssl/certs/vault-ca.crt
-            subPath: ca.crt  # CRITICAL: Prevents deleting the public OS certificates
+            subPath: ca.crt
             readOnly: true
 
         config:
