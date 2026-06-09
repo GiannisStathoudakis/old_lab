@@ -11,19 +11,31 @@ spec:
     targetRevision: 1.2.2
     helm:
       values: |
+        volumes:
+          - name: vault-ca-cert
+            secret:
+              secretName: argocd-oidc-secret
+              items:
+                - key: rootCA
+                  path: ca.crt
+        
+        volumeMounts:
+          - name: vault-ca-cert
+            mountPath: /etc/ssl/certs/vault-ca.crt
+            subPath: ca.crt  # CRITICAL: Prevents deleting the public OS certificates
+            readOnly: true
+
         config:
           registries:
             - name: harbor
               prefix: harbor.lab.internal
-              api_url: https://harbor.lab.internal
+              api_url: https://harbor.harbor-system.svc.cluster.local
               ping: yes
-              insecure: yes
               credentials: pullsecret:argocd/harbor-pull-secret
         
-        hostAliases:
-          - ip: "192.168.80.200"
-            hostnames:
-              - "harbor.lab.internal"
+        createClusterRoles: true
+        rbac:
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -33,14 +45,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
----
-#config
-apiVersion: argocd-image-updater.argoproj.io/v1alpha1
-kind: ImageUpdater
-metadata:
-  name: default-updater
-  namespace: argocd
-spec:
-  applicationRefs:
-    - namePattern: "*"
-      useAnnotations: true
