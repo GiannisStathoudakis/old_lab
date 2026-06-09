@@ -37,8 +37,6 @@ spec:
             path: apps/forgejo-runner
           - app: harbor
             path: apps/harbor
-          - app: argocd-image-updater
-            path: apps/argocd-image-updater
 
   template:
     metadata:
