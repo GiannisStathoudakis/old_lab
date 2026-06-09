@@ -51,6 +51,7 @@ jobs:
           mvn compile jib:build \
             -Djib.from.image=eclipse-temurin:21-jre-alpine \
             -Djib.to.image=harbor.harbor-system.svc.cluster.local/test/hello-world:${{ github.sha }} \
+            -Djib.to.tags=latest \
             -Djib.to.auth.username='${{ env.HARBOR_USERNAME }}' \
             -Djib.to.auth.password='${{ env.HARBOR_PASSWORD }}' \
             -Djib.allowInsecureRegistries=true \
