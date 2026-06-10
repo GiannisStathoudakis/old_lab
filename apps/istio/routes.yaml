@@ -178,4 +178,4 @@ spec:
   rules:
   - backendRefs:
     - name: kargo-api
-      port: 8080
+      port: 443
