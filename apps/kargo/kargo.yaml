@@ -31,6 +31,10 @@ spec:
                   - "authentik Admins"
           ingress:
             enabled: false
+
+          extraEnv:
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/vault-ca.crt
             
           extraVolumes:
             - name: vault-ca-cert
@@ -48,7 +52,11 @@ spec:
         controller:
           argocd:
             integrationEnabled: true
-            namespace: argocd
+            namespace: 
+          
+          extraEnv:
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/vault-ca.crt
             
           extraVolumes:
             - name: vault-ca-cert
