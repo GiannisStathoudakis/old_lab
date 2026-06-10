@@ -18,16 +18,14 @@ spec:
             terminatedUpstream: true
           secret:
             name: kargo-api-secret
+            
+          cabundle:
+            secretName: kargo-oidc-secret
+
           oidc:
             enabled: true
             issuerURL: https://authentik.lab.internal/application/o/kargo/
             clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
-            clientSecretRef:
-              name: kargo-oidc-secret
-              key: oidc-client-secret
-            caBundleSecretKeyRef:
-              name: kargo-oidc-secret
-              key: ca.crt
             admins:
               claims:
                 groups:
@@ -36,8 +34,11 @@ spec:
         controller:
           argocd:
             integrationEnabled: true
-            namespace: 
-          
+            namespace: argocd
+            
+          cabundle:
+            secretName: kargo-oidc-secret
+
         metrics:
           enabled: true
           serviceMonitor:
