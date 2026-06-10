@@ -33,6 +33,14 @@ spec:
     kind: ClusterSecretStore
   target:
     name: kargo-harbor-secret
+    template:
+      metadata:
+        labels:
+          kargo.akuity.io/cred-type: image
+      data:
+        repoURL: harbor.lab.internal
+        username: "{{ .username }}"
+        password: "{{ .password }}"
   data:
   - secretKey: username
     remoteRef:
@@ -55,6 +63,14 @@ spec:
     kind: ClusterSecretStore
   target:
     name: kargo-forgejo-secret
+    template:
+      metadata:
+        labels:
+          kargo.akuity.io/cred-type: git
+      data:
+        repoURL: https://forgejo.lab.internal/admin1/Test.git
+        username: "{{ .username }}"
+        password: "{{ .password }}"
   data:
   - secretKey: username
     remoteRef:
