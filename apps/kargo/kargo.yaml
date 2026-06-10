@@ -32,45 +32,11 @@ spec:
           ingress:
             enabled: false
 
-          extraEnv:
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/certs/vault-ca.crt
-            
-          extraVolumes:
-            - name: vault-ca-cert
-              secret:
-                secretName: kargo-oidc-secret
-                items:
-                  - key: ca.crt
-                    path: ca.crt
-          extraVolumeMounts:
-            - name: vault-ca-cert
-              mountPath: /etc/ssl/certs/ca-certificates.crt
-              subPath: ca.crt
-              readOnly: true
-
         controller:
           argocd:
             integrationEnabled: true
             namespace: 
           
-          extraEnv:
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/certs/vault-ca.crt
-            
-          extraVolumes:
-            - name: vault-ca-cert
-              secret:
-                secretName: kargo-oidc-secret
-                items:
-                  - key: ca.crt
-                    path: ca.crt
-          extraVolumeMounts:
-            - name: vault-ca-cert
-              mountPath: /etc/ssl/certs/vault-ca.crt
-              subPath: ca.crt
-              readOnly: true
-
         metrics:
           enabled: true
           serviceMonitor:
