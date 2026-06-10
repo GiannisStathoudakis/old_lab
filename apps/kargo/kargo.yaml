@@ -25,6 +25,9 @@ spec:
             clientSecretRef:
               name: kargo-oidc-secret
               key: oidc-client-secret
+            caBundleSecretKeyRef:
+              name: kargo-oidc-secret
+              key: ca.crt
             admins:
               claims:
                 groups:
