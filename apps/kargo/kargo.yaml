@@ -1,0 +1,77 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kargo-controller
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/akuity/kargo-charts
+    chart: kargo
+    targetRevision: 1.10.5
+    helm:
+      values: |
+        api:
+          host: kargo.lab.internal
+          oidc:
+            enabled: true
+            issuerURL: https://authentik.lab.internal/application/o/kargo/
+            clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
+            clientSecretRef:
+              name: kargo-oidc-secret
+              key: oidc-client-secret
+            admins:
+              claims:
+                groups:
+                  - "authentik Admins"
+          ingress:
+            enabled: false
+            
+          extraVolumes:
+            - name: vault-ca-cert
+              secret:
+                secretName: kargo-oidc-secret
+                items:
+                  - key: ca.crt
+                    path: ca.crt
+          extraVolumeMounts:
+            - name: vault-ca-cert
+              mountPath: /etc/ssl/certs/vault-ca.crt
+              subPath: ca.crt
+              readOnly: true
+
+        controller:
+          argocd:
+            integrationEnabled: true
+            namespace: argocd
+            
+          extraVolumes:
+            - name: vault-ca-cert
+              secret:
+                secretName: kargo-oidc-secret
+                items:
+                  - key: ca.crt
+                    path: ca.crt
+          extraVolumeMounts:
+            - name: vault-ca-cert
+              mountPath: /etc/ssl/certs/vault-ca.crt
+              subPath: ca.crt
+              readOnly: true
+
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            selector:
+              release: victoria-metrics
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kargo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -37,6 +37,8 @@ spec:
             path: apps/forgejo-runner
           - app: harbor
             path: apps/harbor
+          - app: kargo
+            path: apps/kargo
 
   template:
     metadata:

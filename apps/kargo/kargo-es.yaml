@@ -1,0 +1,66 @@
+#Authentik secrets
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kargo-oidc-es
+  namespace: kargo
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: kargo-oidc-secret
+  data:
+  - secretKey: oidc-client-secret
+    remoteRef:
+      key: secret/data/kargo/authentik 
+      property: client_secret
+  - secretKey: ca.crt
+    remoteRef:
+      key: secret/data/kargo/authentik 
+      property: CA
+--- #harbor secrets
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kargo-harbor-es
+  namespace: kargo
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: kargo-harbor-secret
+  data:
+  - secretKey: username
+    remoteRef:
+      key: secret/data/kargo/harbor
+      property: username
+  - secretKey: password
+    remoteRef:
+      key: secret/data/kargo/harbor
+      property: password
+--- #forgejo secrets
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kargo-forgejo-es
+  namespace: kargo
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: kargo-forgejo-secret
+  data:
+  - secretKey: username
+    remoteRef:
+      key: secret/data/kargo/forgejo
+      property: username
+  - secretKey: password
+    remoteRef:
+      key: secret/data/kargo/forgejo
+      property: token

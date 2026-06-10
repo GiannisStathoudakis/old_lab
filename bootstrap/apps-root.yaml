@@ -14,10 +14,6 @@ spec:
   template:
     metadata:
       name: '{{app}}'
-      annotations:
-        argocd-image-updater.argoproj.io/image-list: spring-app=harbor.lab.internal/test/{{app}}
-        argocd-image-updater.argoproj.io/spring-app.update-strategy: newest-build
-        argocd-image-updater.argoproj.io/write-back-method: git
     spec:
       project: default
       source:

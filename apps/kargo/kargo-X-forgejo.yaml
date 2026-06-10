@@ -1,0 +1,21 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Credentials
+metadata:
+  name: forgejo-auth
+  namespace: kargo
+spec:
+  repoURL: https://forgejo.lab.internal/admin1/Test.git
+  type: Git
+  secret:
+    name: kargo-forgejo-secret
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Credentials
+metadata:
+  name: harbor-auth
+  namespace: kargo
+spec:
+  repoURL: harbor.lab.internal
+  type: Image
+  secret:
+    name: kargo-harbor-secret
