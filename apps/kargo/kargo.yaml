@@ -45,7 +45,7 @@ spec:
                     path: ca.crt
           extraVolumeMounts:
             - name: vault-ca-cert
-              mountPath: /etc/ssl/certs/vault-ca.crt
+              mountPath: /etc/ssl/certs/ca-certificates.crt
               subPath: ca.crt
               readOnly: true
 
