@@ -20,11 +20,11 @@ spec:
             name: kargo-api-secret
             
           cabundle:
-            secretName: kargo-oidc-secret
+            secretName: kargo-ca-secret
 
           oidc:
             enabled: true
-            issuerURL: https://authentik.lab.internal/application/o/kargo/
+            issuerURL: https://authentik.lab.internal/application/o/kargo
             clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
             admins:
               claims:
@@ -37,7 +37,7 @@ spec:
             namespace: argocd
             
           cabundle:
-            secretName: kargo-oidc-secret
+            secretName: kargo-ca-secret
 
         metrics:
           enabled: true
