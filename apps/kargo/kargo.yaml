@@ -13,6 +13,9 @@ spec:
       values: |
         api:
           host: kargo.lab.internal
+          tls:
+            enabled: false
+            terminatedUpstream: true
           secret:
             name: kargo-api-secret
           oidc:
