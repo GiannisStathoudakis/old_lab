@@ -80,3 +80,25 @@ spec:
     remoteRef:
       key: secret/data/kargo/forgejo
       property: token
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kargo-admin-es
+  namespace: kargo
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: kargo-api-secret
+  data:
+  - secretKey: ADMIN_ACCOUNT_PASSWORD_HASH
+    remoteRef:
+      key: secret/data/kargo/admin
+      property: passwordHash
+  - secretKey: ADMIN_ACCOUNT_TOKEN_SIGNING_KEY
+    remoteRef:
+      key: secret/data/kargo/admin
+      property: tokenSigningKey
