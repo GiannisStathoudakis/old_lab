@@ -16,19 +16,19 @@ spec:
           tls:
             enabled: false
             terminatedUpstream: true
-          #secret:
-          #  name: kargo-api-secret
-          #oidc:
-          #  enabled: true
-          #  issuerURL: https://authentik.lab.internal/application/o/kargo/
-          #  clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
-          #  clientSecretRef:
-          #    name: kargo-oidc-secret
-          #    key: oidc-client-secret
-          #  admins:
-          #    claims:
-          #      groups:
-          #        - "authentik Admins"
+          secret:
+            name: kargo-api-secret
+          oidc:
+            enabled: true
+            issuerURL: https://authentik.lab.internal/application/o/kargo/
+            clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
+            clientSecretRef:
+              name: kargo-oidc-secret
+              key: oidc-client-secret
+            admins:
+              claims:
+                groups:
+                  - "authentik Admins"
 
         controller:
           argocd:
