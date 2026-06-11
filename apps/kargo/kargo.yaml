@@ -17,8 +17,8 @@ spec:
             enabled: false
             terminatedUpstream: true
 
-          #secret:
-          #  name: kargo-api-secret
+          secret:
+            name: kargo-api-secret
             
           #cabundle:
           #  secretName: kargo-ca-secret
