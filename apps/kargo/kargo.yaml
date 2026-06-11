@@ -32,6 +32,8 @@ spec:
                   - "authentik Admins"
 
         controller:
+          cabundle:
+            secretName: kargo-ca-secret
           argocd:
             integrationEnabled: true
             namespace: argocd
