@@ -18,23 +18,23 @@
 #      property: client_secret
 
 #---
-#apiVersion: external-secrets.io/v1
-#kind: ExternalSecret
-#metadata:
-#  name: kargo-ca-es
-#  namespace: kargo
-#spec:
-#  refreshInterval: "1h"
-#  secretStoreRef:
-#    name: vault-backend
-#    kind: ClusterSecretStore
-#  target:
-#    name: kargo-ca-secret
-#  data:
-#  - secretKey: ca.crt
-#    remoteRef:
-#      key: secret/data/kargo/authentik 
-#      property: CA
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kargo-ca-es
+  namespace: kargo
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: kargo-ca-secret
+  data:
+  - secretKey: ca.crt
+    remoteRef:
+      key: secret/data/kargo/authentik 
+      property: CA
 --- #harbor secrets
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret

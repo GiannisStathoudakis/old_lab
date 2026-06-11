@@ -36,6 +36,17 @@ spec:
           argocd:
             integrationEnabled: true
             namespace: argocd
+          cabundle:
+            secretName: kargo-ca-secret
+            
+            extraVolumes:
+              - name: custom-ca
+                secret:
+                  secretName: kargo-ca-secret
+            extraVolumeMounts:
+              - name: custom-ca
+                mountPath: /etc/ssl/certs/ca-certificates.crt
+                subPath: ca.crt
             
           #cabundle:
           #  secretName: kargo-ca-secret
