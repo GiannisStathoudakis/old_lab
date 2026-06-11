@@ -54,16 +54,12 @@ spec:
         labels:
           kargo.akuity.io/cred-type: image
       data:
-        .dockerconfigjson: '{"auths":{"harbor.lab.internal":{"username":"{{ .username }}","password":"{{ .password }}","auth":"{{ printf "%s:%s" .username .password | b64enc }}"}}}'
+        .dockerconfigjson: '{"auths":{"harbor.lab.internal":{"auth":"{{ .auth_token }}"}}}'
   data:
-  - secretKey: username
+  - secretKey: auth_token
     remoteRef:
       key: secret/data/kargo/harbor
-      property: username
-  - secretKey: password
-    remoteRef:
-      key: secret/data/kargo/harbor
-      property: password
+      property: harbor-auth-token
 --- #forgejo secrets
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
