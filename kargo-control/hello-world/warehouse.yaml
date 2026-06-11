@@ -8,5 +8,5 @@ spec:
   subscriptions:
   - image:
       repoURL: harbor.lab.internal/test/hello-world
-      imageSelectionStrategy: Lexicographical
+      imageSelectionStrategy: Lexical
       allowTags: ^[a-f0-9]{7,40}$
