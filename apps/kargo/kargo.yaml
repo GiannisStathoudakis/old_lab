@@ -39,13 +39,6 @@ spec:
           cabundle:
             secretName: kargo-ca-secret
 
-        metrics:
-          enabled: true
-          serviceMonitor:
-            enabled: true
-            selector:
-              release: victoria-metrics
-
   destination:
     server: https://kubernetes.default.svc
     namespace: kargo
