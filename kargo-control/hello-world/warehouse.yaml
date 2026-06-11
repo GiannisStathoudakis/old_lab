@@ -4,6 +4,8 @@ metadata:
   name: hello-world-watcher
   namespace: spring-apps
 spec:
+  credentials:
+    name: kargo-harbor-secret
   interval: 5m0s
   subscriptions:
   - image:
