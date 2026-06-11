@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kargo-pipelines
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - app: hello-world
+            path: kargo-control/hello-world
+
+  template:
+    metadata:
+      name: 'kargo-pipeline-{{app}}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:GiannisStathoudakis/lab.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: kargo
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

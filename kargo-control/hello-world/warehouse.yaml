@@ -1,0 +1,10 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: hello-world-watcher
+  namespace: spring-apps
+spec:
+  subscriptions:
+    - image:
+        repoURL: harbor.lab.internal/test/hello-world
+        allowTags: '^[a-f0-9]{7,40}$'
