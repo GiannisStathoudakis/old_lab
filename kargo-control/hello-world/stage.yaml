@@ -18,7 +18,7 @@ spec:
             checkout:
               - branch: main
                 path: ./repo
-                
+                #
         - uses: argoproj-labs/argocd-workflows-shell-step@v0.1.0 
           as: debug-workspace
           config:
