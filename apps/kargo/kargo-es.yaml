@@ -39,8 +39,8 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: kargo-harbor-es
-  namespace: kargo
+  name: kargo-harbor-secret
+  namespace: spring-apps
 spec:
   refreshInterval: "1h"
   secretStoreRef:
@@ -53,7 +53,6 @@ spec:
         labels:
           kargo.akuity.io/cred-type: image
       data:
-        repoURL: harbor.lab.internal
         username: "{{ .username }}"
         password: "{{ .password }}"
   data:
