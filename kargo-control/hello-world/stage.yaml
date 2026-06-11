@@ -22,7 +22,7 @@ spec:
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./repo/infra
+            path: ./repo/Test/infra
             images:
               - image: harbor.lab.internal/test/hello-world
                 tag: ${{ imageFrom('harbor.lab.internal/test/hello-world').Tag }}
