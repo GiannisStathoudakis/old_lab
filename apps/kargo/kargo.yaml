@@ -16,6 +16,21 @@ spec:
           tls:
             enabled: false
             terminatedUpstream: true
+
+          extraEnv:
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+          
+          # Force mount your CA into the standard Go path
+          extraVolumes:
+            - name: custom-ca
+              secret:
+                secretName: kargo-ca-secret
+          extraVolumeMounts:
+            - name: custom-ca
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              subPath: ca.crt
+              
           secret:
             name: kargo-api-secret
             
