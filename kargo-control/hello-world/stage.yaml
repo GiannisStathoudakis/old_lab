@@ -17,7 +17,10 @@ spec:
             checkout:
               - branch: main
                 path: .
-
+        - uses: argoproj-labs/argocd-workflows-shell-step@v0.1.0 
+          as: debug-step
+          config:
+            command: ls -R .
         - uses: kustomize-set-image
           as: update-image
           config:
