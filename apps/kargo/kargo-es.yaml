@@ -40,7 +40,7 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: kargo-harbor-secret
-  namespace: spring-apps
+  namespace: kargo
 spec:
   refreshInterval: "1h"
   secretStoreRef:
@@ -54,12 +54,16 @@ spec:
         labels:
           kargo.akuity.io/cred-type: image
       data:
-        .dockerconfigjson: '{"auths":{"harbor.lab.internal":{"auth":"{{ .auth_token }}"}}}'
+        .dockerconfigjson: '{"auths":{"harbor.lab.internal":{"username":"{{ .username }}","password":"{{ .password }}"}}}'
   data:
-  - secretKey: auth_token
+  - secretKey: username
     remoteRef:
       key: secret/data/kargo/harbor
-      property: harbor-auth-token
+      property: username
+  - secretKey: password
+    remoteRef:
+      key: secret/data/kargo/harbor
+      property: password
 --- #forgejo secrets
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
