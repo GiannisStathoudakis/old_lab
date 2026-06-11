@@ -17,44 +17,28 @@ spec:
             enabled: false
             terminatedUpstream: true
 
-          extraEnv:
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/certs/ca-certificates.crt
-          
-          # Force mount your CA into the standard Go path
-          extraVolumes:
-            - name: custom-ca
-              secret:
-                secretName: kargo-ca-secret
-          extraVolumeMounts:
-            - name: custom-ca
-              mountPath: /etc/ssl/certs/ca-certificates.crt
-              subPath: ca.crt
-              
-          secret:
-            name: kargo-api-secret
+          #secret:
+          #  name: kargo-api-secret
             
-          cabundle:
-            secretName: kargo-ca-secret
+          #cabundle:
+          #  secretName: kargo-ca-secret
 
-          oidc:
-            enabled: true
-            issuerURL: https://authentik.lab.internal/application/o/kargo
-            clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
-            admins:
-              claims:
-                groups:
-                  - "authentik Admins"
+          #oidc:
+          #  enabled: true
+          #  issuerURL: https://authentik.lab.internal/application/o/kargo
+          #  clientID: "pi8nRMDJMMPhj6opG7nTycVOMsFUMNaX2SKvHYnI" 
+          #  admins:
+          #    claims:
+          #      groups:
+          #        - "authentik Admins"
 
         controller:
-          cabundle:
-            secretName: kargo-ca-secret
           argocd:
             integrationEnabled: true
             namespace: argocd
             
-          cabundle:
-            secretName: kargo-ca-secret
+          #cabundle:
+          #  secretName: kargo-ca-secret
 
   destination:
     server: https://kubernetes.default.svc
