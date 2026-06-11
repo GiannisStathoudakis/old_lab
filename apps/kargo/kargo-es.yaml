@@ -54,7 +54,7 @@ spec:
         labels:
           kargo.akuity.io/cred-type: image
       data:
-        repoURL: "harbor.lab.internal"
+        repoURL: "harbor.lab.internal/test/hello-world"
         username: "{{ .username }}"
         password: "{{ .password }}"
   data:
