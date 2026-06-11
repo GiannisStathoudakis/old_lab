@@ -28,7 +28,7 @@ spec:
           config:
             path: ./src
             messageFromSteps:
-              - - update-image
+              - update-image
         - uses: git-push
           config:
             path: ./src
