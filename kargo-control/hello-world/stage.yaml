@@ -17,22 +17,22 @@ spec:
             repoURL: https://forgejo.lab.internal/admin1/Test.git
             checkout:
               - branch: main
-                path: .
+                path: ./repo
 
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./infra
+            path: ./repo/Test/infra
             images:
               - image: harbor.lab.internal/test/hello-world
                 tag: ${{ imageFrom('harbor.lab.internal/test/hello-world').Tag }}
 
         - uses: git-commit
           config:
-            path: .
+            path: ./repo/Test
             messageFromSteps:
               - update-image
 
         - uses: git-push
           config:
-            path: .
+            path: ./repo/Test
