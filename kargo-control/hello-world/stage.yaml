@@ -18,15 +18,17 @@ spec:
               - branch: main
                 path: ./src
         - uses: kustomize-set-image
+          as: step-2
           config:
             path: ./src/infra
             images:
               - image: harbor.lab.internal/test/hello-world
+                tag: ${{ imageFrom('harbor.lab.internal/test/hello-world').Tag }}
         - uses: git-commit
           config:
             path: ./src
             messageFromSteps:
-              - kustomize-set-image
+              - kustomize-set-image   
         - uses: git-push
           config:
             path: ./src

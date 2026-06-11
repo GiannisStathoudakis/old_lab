@@ -2,3 +2,14 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
   name: spring-apps
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ProjectConfig
+metadata:
+  name: spring-apps 
+  namespace: spring-apps
+spec:
+  promotionPolicies:
+    - stageSelector:
+        name: dev
+      autoPromotionEnabled: true
