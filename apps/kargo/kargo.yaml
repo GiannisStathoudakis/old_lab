@@ -40,15 +40,6 @@ spec:
           cabundle:
             secretName: kargo-ca-secret
 
-          extraVolumes:
-            - name: custom-ca
-              secret:
-                secretName: kargo-ca-secret
-          extraVolumeMounts:
-            - name: custom-ca
-              mountPath: /etc/ssl/certs/ca-certificates.crt
-              subPath: ca.crt
-
   destination:
     server: https://kubernetes.default.svc
     namespace: kargo
