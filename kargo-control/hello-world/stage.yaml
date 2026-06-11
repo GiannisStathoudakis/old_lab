@@ -18,7 +18,7 @@ spec:
               - branch: main
                 path: ./src
         - uses: kustomize-set-image
-          as: step-2
+          as: update-image-tag
           config:
             path: ./src/infra
             images:
@@ -28,7 +28,7 @@ spec:
           config:
             path: ./src
             messageFromSteps:
-              - kustomize-set-image   
+              - - update-image-tag
         - uses: git-push
           config:
             path: ./src
