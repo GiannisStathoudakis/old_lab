@@ -49,12 +49,12 @@ spec:
   target:
     name: kargo-harbor-secret
     template:
+      type: kubernetes.io/dockerconfigjson
       metadata:
         labels:
           kargo.akuity.io/cred-type: image
       data:
-        username: "{{ .username }}"
-        password: "{{ .password }}"
+        .dockerconfigjson: '{"auths":{"harbor.lab.internal":{"username":"{{ .username }}","password":"{{ .password }}","auth":"{{ printf "%s:%s" .username .password | b64enc }}"}}}'
   data:
   - secretKey: username
     remoteRef:
