@@ -12,7 +12,7 @@ spec:
     spec:
       steps:
         - uses: git-clone
-          as: step-1
+          as: checkout-repo
           config:
             repoURL: https://forgejo.lab.internal/admin1/Test.git
             checkout:
@@ -22,7 +22,7 @@ spec:
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./repo/infra #s
+            path: ./repo/infra
             images:
               - image: harbor.lab.internal/test/hello-world
                 tag: ${{ imageFrom('harbor.lab.internal/test/hello-world').Tag }}
