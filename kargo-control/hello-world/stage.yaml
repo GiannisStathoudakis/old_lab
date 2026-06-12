@@ -12,7 +12,7 @@ spec:
         name: hello-world-watcher
       sources:
         direct: true 
-  promotionTemplate:
+  promotionTemplate: 
     spec:
       steps:
         - uses: git-clone
