@@ -8,7 +8,5 @@ spec:
   subscriptions:
     - image:
         repoURL: harbor.lab.internal/test/hello-world
-        imageSelectionStrategy: NewestBuild
-        allowTags: "^[a-f0-9]{40}$"
-        ignoreTags:
-          - latest
+        imageSelectionStrategy: SemVer
+        semverConstraint: ^1.0.0
