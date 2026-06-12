@@ -27,6 +27,9 @@ spec:
               ALLOWED_HOST_LIST: "argocd.lab.internal"
             actions:
               ENABLED: true
+          additionalTrustedCAs:
+            secretName: kargo-ca-secret
+            secretKey: ca.crt
           admin:
             existingSecret: "forgejo-auth"
         service:
