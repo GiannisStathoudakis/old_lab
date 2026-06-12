@@ -32,8 +32,7 @@ spec:
         - uses: git-commit
           config:
             path: ./src
-            messageFromSteps:
-              - update-image
+            message: ${{ outputs['update-image'].commitMessage }}
 
         - uses: git-push
           config:
