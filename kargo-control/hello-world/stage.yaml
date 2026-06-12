@@ -3,6 +3,8 @@ kind: Stage
 metadata:
   name: dev
   namespace: spring-apps
+  annotations:
+    kargo.akuity.io/auto-promotion-policy: Always
 spec:
   requestedFreight:
     - origin:
