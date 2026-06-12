@@ -13,6 +13,11 @@ spec:
     targetRevision: 16.2.2
     helm:
       values: |
+        global:
+          hostAliases:
+            - ip: 192.168.80.200
+            hostnames:
+              - argocd.lab.internal
         gitea:
           config:
             server:
