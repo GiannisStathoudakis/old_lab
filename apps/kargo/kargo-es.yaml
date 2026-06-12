@@ -71,7 +71,7 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: kargo-forgejo-es
-  namespace: kargo
+  namespace: spring-apps
 spec:
   refreshInterval: "1h"
   secretStoreRef:
