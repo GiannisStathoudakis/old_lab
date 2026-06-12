@@ -27,9 +27,6 @@ spec:
               ALLOWED_HOST_LIST: "argocd.lab.internal"
             actions:
               ENABLED: true
-          additionalTrustedCAs:
-            secretName: kargo-ca-secret
-            secretKey: ca.crt
           admin:
             existingSecret: "forgejo-auth"
         service:
@@ -46,6 +43,16 @@ spec:
               enabled: true
               storageClass: "longhorn-single-replica"
               size: 10Gi
+        extraVolumes:
+            - name: custom-ca
+              secret:
+                secretName: kargo-ca-secret
+          
+        extraContainerVolumeMounts:
+          - name: custom-ca
+            mountPath: /etc/ssl/certs/kargo-ca.crt
+            subPath: ca.crt
+            readOnly: true
   destination:
     server: https://kubernetes.default.svc
     namespace: forgejo-system
