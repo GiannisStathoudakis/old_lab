@@ -44,14 +44,13 @@ jobs:
           kv-version: 2
           secrets: |
             secret/data/forgejo/registry username | HARBOR_USERNAME ;
-            secret/data/forgejo/registry password | HARBOR_PASSWORD ;
+            secret/data/forgejo/registry password | HARBOR_PASSWORD ; 
 
       - name: Build and Push Image
         run: |
           mvn compile jib:build \
             -Djib.from.image=eclipse-temurin:21-jre-alpine \
-            -Djib.to.image=harbor.harbor-system.svc.cluster.local/test/hello-world:${{ github.sha }} \
-            -Djib.to.tags=latest \
+            -Djib.to.image=harbor.lab.internal/test/hello-world:v1.0.${{ github.run_number }} \
             -Djib.to.auth.username='${{ env.HARBOR_USERNAME }}' \
             -Djib.to.auth.password='${{ env.HARBOR_PASSWORD }}' \
             -Djib.allowInsecureRegistries=true \
